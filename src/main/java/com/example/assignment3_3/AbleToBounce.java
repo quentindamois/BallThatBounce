@@ -1,5 +1,6 @@
 package com.example.assignment3_3;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
@@ -13,7 +14,7 @@ public class AbleToBounce extends Circle {
         super(radius);
     }
     public AbleToBounce(double centerX, double centerY, double radius, int xSpeed, int ySpeed) {
-        super(centerX, centerY, radius);
+        super(centerX, centerY, radius, Color.BLUE);
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
     }
