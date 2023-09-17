@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 
 /**
  * The ball class is the class used to show a window. This is a subclass of the Application class.
- *
+ *:::::
  * */
 public class Ball extends Application {
     /**
