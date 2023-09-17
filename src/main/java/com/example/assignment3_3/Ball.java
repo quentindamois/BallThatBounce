@@ -42,7 +42,9 @@ public class Ball extends Application {
        this.ballgroup.setVgap(1.0);
        this.ballgroup.setHgap(1.0);
        this.ballgroup.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-           bouncing(event.getSceneX(), event.getSceneY());
+           if (ballThatBounce.isEmpty()) {
+               bouncing(event.getSceneX(), event.getSceneY());
+           }
        });
        this.executor = Executors.newFixedThreadPool(2);
        this.executor.submit(() -> {
@@ -77,7 +79,7 @@ public class Ball extends Application {
             if (!ballThatBounce.isEmpty()) {
                 for (int i = 0; i < ballThatBounce.size(); i++) {
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(20);
                         ballThatBounce.get(i).setCenterX(ballThatBounce.get(i).getCenterX() + ballThatBounce.get(i).getXSpeed());
                         ballThatBounce.get(i).setCenterY(ballThatBounce.get(i).getCenterY() + ballThatBounce.get(i).getYSpeed());
                         ballThatBounce.get(i).setTranslateX(ballThatBounce.get(i).getCenterX() + ballThatBounce.get(i).getXSpeed());
