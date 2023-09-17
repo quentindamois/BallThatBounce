@@ -60,9 +60,7 @@ public class Ball extends Application {
     }
     public void bouncing(double x, double y) {
         int xSpeed = Math.random() > 0.5 ? 1 : -1;
-        //xSpeed *= Math.random() > 0.5 ? 1 : -1;
         int ySpeed = Math.random() > 0.5 ? 1 : -1;
-        //ySpeed *= Math.random() > 0.5 ? 1 : -1;
         this.ballThatBounce = new AbleToBounce(x - 12.5, y - 12.5,25.0, xSpeed, ySpeed);
         this.ballgroup.getChildren().add(ballThatBounce);
     }
