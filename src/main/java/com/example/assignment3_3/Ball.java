@@ -42,10 +42,9 @@ public class Ball extends Application {
        this.ballgroup.setVgap(1.0);
        this.ballgroup.setHgap(1.0);
        this.ballgroup.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-           System.out.println("Working");
            bouncing(event.getSceneX(), event.getSceneY());
        });
-       this.executor = Executors.newFixedThreadPool(20);
+       this.executor = Executors.newFixedThreadPool(2);
        this.executor.submit(() -> {
            actualise();
        });
@@ -55,38 +54,21 @@ public class Ball extends Application {
         ballgroup.getChildren().add(title);
         stage.show();
     }
-    public boolean borderTouch(int n) {
+    public void borderTouch(int n) {
         int i = 0;
         boolean touch = false;
         while(i < this.ballThatBounce.size() && !touch) {
-            System.out.println("Numeros "  + i + "et numeros du circle " + n);
-            System.out.println("Border : ");
-            System.out.println( this.ballThatBounce.get(n).iSBorderColideAll(this.WINDOW_WIDTH, this.WINDOW_HEIGHT));
-            System.out.println("Other ball : ");
-            System.out.println(this.ballThatBounce.get(n).Colide(this.ballThatBounce.get(i)));
-            System.out.println("What's suppose to be in touch : ");
-            System.out.println(this.ballThatBounce.get(n).Colide(this.ballThatBounce.get(i)) || this.ballThatBounce.get(n).iSBorderColideAll(this.WINDOW_WIDTH, this.WINDOW_HEIGHT));
-            //touch = this.ballThatBounce.get(n).iSBorderColideAll(this.WINDOW_WIDTH, this.WINDOW_HEIGHT);
-            //touch = i != n ? this.ballThatBounce.get(n).Colide(this.ballThatBounce.get(i)) || this.ballThatBounce.get(n).iSBorderColideAll(this.WINDOW_WIDTH, this.WINDOW_HEIGHT) : this.ballThatBounce.get(n).iSBorderColideAll(this.WINDOW_WIDTH, this.WINDOW_HEIGHT);
             this.ballThatBounce.get(i).BorderColideHandler(this.WINDOW_WIDTH, this.WINDOW_HEIGHT);
-            System.out.println("i avant" + i);
             i++;
-            System.out.println("i après " + i);
         }
-        System.out.println("touch :");
-        System.out.println(touch);
-        if (touch) System.out.println("Rebond");
-        return touch;
     }
     public void bouncing(double x, double y) {
-        //this.executor.shutdown();
         int xSpeed = Math.random() > 0.5 ? 1 : -1;
         //xSpeed *= Math.random() > 0.5 ? 1 : -1;
         int ySpeed = Math.random() > 0.5 ? 1 : -1;
         //ySpeed *= Math.random() > 0.5 ? 1 : -1;
         this.ballThatBounce.add(new AbleToBounce(x - 12.5, y - 12.5,25.0, xSpeed, ySpeed));
         int ballNumber = this.ballThatBounce.size() - 1;
-        //GridPane.setConstraints(ballThatBounce.get(ballNumber), (int) ballThatBounce.get(ballNumber).getCenterX(), (int) ballThatBounce.get(ballNumber).getCenterY());
         this.ballgroup.getChildren().add(ballThatBounce.get(ballNumber));
     }
     public void actualise() {
@@ -95,15 +77,12 @@ public class Ball extends Application {
             if (!ballThatBounce.isEmpty()) {
                 for (int i = 0; i < ballThatBounce.size(); i++) {
                     try {
-                        System.out.println(ballThatBounce.get(i));
                         Thread.sleep(100);
                         ballThatBounce.get(i).setCenterX(ballThatBounce.get(i).getCenterX() + ballThatBounce.get(i).getXSpeed());
                         ballThatBounce.get(i).setCenterY(ballThatBounce.get(i).getCenterY() + ballThatBounce.get(i).getYSpeed());
                         ballThatBounce.get(i).setTranslateX(ballThatBounce.get(i).getCenterX() + ballThatBounce.get(i).getXSpeed());
                         ballThatBounce.get(i).setTranslateY(ballThatBounce.get(i).getCenterY() + ballThatBounce.get(i).getYSpeed());
-                        //ballThatBounce.get(i).setXSpeed(ballThatBounce.get(i).getXSpeed() * (borderTouch(i) ? -1 : 1));
-                        //ballThatBounce.get(i).setYSpeed(ballThatBounce.get(i).getYSpeed() * (borderTouch(i) ? -1 : 1));
-                        System.out.println(borderTouch(i) ? -1 : 1);
+                        borderTouch(i);
                     } catch (InterruptedException e) {
                         System.out.println("ERRORRR");
                     }
