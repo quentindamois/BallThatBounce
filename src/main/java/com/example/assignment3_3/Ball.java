@@ -101,8 +101,8 @@ public class Ball extends Application {
                         ballThatBounce.get(i).setCenterY(ballThatBounce.get(i).getCenterY() + ballThatBounce.get(i).getYSpeed());
                         ballThatBounce.get(i).setTranslateX(ballThatBounce.get(i).getCenterX() + ballThatBounce.get(i).getXSpeed());
                         ballThatBounce.get(i).setTranslateY(ballThatBounce.get(i).getCenterY() + ballThatBounce.get(i).getYSpeed());
-                        ballThatBounce.get(i).setXSpeed(ballThatBounce.get(i).getXSpeed() * (borderTouch(i) ? -1 : 1));
-                        ballThatBounce.get(i).setYSpeed(ballThatBounce.get(i).getYSpeed() * (borderTouch(i) ? -1 : 1));
+                        //ballThatBounce.get(i).setXSpeed(ballThatBounce.get(i).getXSpeed() * (borderTouch(i) ? -1 : 1));
+                        //ballThatBounce.get(i).setYSpeed(ballThatBounce.get(i).getYSpeed() * (borderTouch(i) ? -1 : 1));
                         System.out.println(borderTouch(i) ? -1 : 1);
                     } catch (InterruptedException e) {
                         System.out.println("ERRORRR");
