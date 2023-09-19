@@ -44,9 +44,10 @@ public class Ball extends Application {
     private ExecutorService executor;
     /**
      * This function is used for starting the program.
+     * @param stage :this is a stage variable on which every content will be added.
      * */
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         Label title = new Label("click anywhere to throw the ball.");
        this.ballgroup = new GridPane();
        this.ballgroup.setVgap(1.0);
@@ -76,10 +77,14 @@ public class Ball extends Application {
      * The bouncing method generate the ball in the window.
      * It randomly genrate the direction of the ball.
      * It generates a AbleToBounce object and assign it to the field ballThatBounce and add to the field ballgroup.
+     * @param x : this double variable hold the x coordinate hold the x coordinate of the cursor.
+     * @param y : this double variable hold the y coordinate hold the y coordinate of the cursor.
      * */
     public void bouncing(double x, double y) {
-        int xSpeed = Math.random() > 0.5 ? 1 : -1;
-        int ySpeed = Math.random() > 0.5 ? 1 : -1;
+        int xSpeed = Math.random() > 0.5 ? 1 : 0;
+        xSpeed *= Math.random() > 0.5 ? 1 : -1;
+        int ySpeed = Math.random() > 0.5 ? 1 : 0;
+        ySpeed *= Math.random() > 0.5 ? 1 : -1;
         this.ballThatBounce = new AbleToBounce(x - 12.5, y - 12.5,25.0, xSpeed, ySpeed);
         this.ballgroup.getChildren().add(ballThatBounce);
     }
