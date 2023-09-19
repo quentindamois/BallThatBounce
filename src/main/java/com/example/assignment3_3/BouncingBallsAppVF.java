@@ -1,38 +1,40 @@
-package com.example.assignment3_3; // Declaration of the package where the class is located
+package com.example.assignment3_3;
 
-import javafx.animation.AnimationTimer; // Importing the AnimationTimer class from JavaFX to create an animation loop
-import javafx.application.Application; // Importing the Application class from JavaFX to create the application
-import javafx.scene.Scene; // Importing the Scene class from JavaFX to manage the scene
-import javafx.scene.input.MouseEvent; // Importing the MouseEvent class from JavaFX to handle mouse events
-import javafx.scene.layout.Pane; // Importing the Pane class from JavaFX to create a pane-based layout
-import javafx.scene.paint.Color; // Importing the Color class from JavaFX to manage colors
-import javafx.scene.shape.Circle; // Importing the Circle class from JavaFX to create circles
-import javafx.stage.Stage; // Importing the Stage class from JavaFX to manage the application window
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
-import java.util.ArrayList; // Importing the ArrayList class to store objects in a list
-import java.util.List; // Importing the List class to manage lists
-import java.util.Random; // Importing the Random class to generate random numbers
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class BouncingBallsAppVF extends Application { // Defining the main class of the application
+public class BouncingBallsAppVF extends Application {
 
-    private static final int WIDTH = 600; // Defining the width of the window
-    private static final int HEIGHT = 400; // Defining the height of the window
-    private static final int BALL_RADIUS = 20; // Defining the radius of the balls
+    private static final int WIDTH = 900;
+    private static final int HEIGHT = 600;
+    private static final int BALL_RADIUS = 20;
+    private static final double DAMPING_FACTOR = 0.5;
+    private static final double MAX_SPEED = 5.0; // Limite de vitesse maximale
 
-    private List<Ball> balls = new ArrayList<>(); // Creating a list to store the balls
-    private BallSpawner ballSpawner = new BallSpawner(); // Creating a ball spawner
+    private List<Ball> balls = new ArrayList<>();
+    private BallSpawner ballSpawner = new BallSpawner();
 
     @Override
-    public void start(Stage primaryStage) { // Main method to set up the user interface
-        Pane pane = new Pane(); // Creating a pane to display the balls
-        Scene scene = new Scene(pane, WIDTH, HEIGHT); // Creating a scene with the specified size
+    public void start(Stage primaryStage) {
+        Pane pane = new Pane();
+        Scene scene = new Scene(pane, WIDTH, HEIGHT);
 
-        scene.setOnMouseClicked(this::spawnBallOnClick); // Event handler to create a ball on mouse click
+        scene.setOnMouseClicked(this::spawnBallOnClick);
 
-        AnimationTimer animationTimer = new AnimationTimer() { // Creating an animation loop
+        AnimationTimer animationTimer = new AnimationTimer() {
             @Override
-            public void handle(long now) { // Method called on each frame of the animation
-                for (Ball ball : balls) { // Loop to move each ball and handle collisions
+            public void handle(long now) {
+                for (Ball ball : balls) {
                     ball.move();
                     ball.checkBoundaryCollision(WIDTH, HEIGHT);
                     ball.checkBallCollision(balls);
@@ -40,84 +42,114 @@ public class BouncingBallsAppVF extends Application { // Defining the main class
             }
         };
 
-        primaryStage.setScene(scene); // Setting up the scene in the main window
-        primaryStage.setTitle("Bouncing Balls"); // Setting the window title
-        primaryStage.show(); // Displaying the window
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Bouncing Balls");
+        primaryStage.show();
 
-        animationTimer.start(); // Starting the animation loop
+        animationTimer.start();
     }
 
-    private void spawnBallOnClick(MouseEvent event) { // Method to create a ball on mouse click
-        Ball ball = ballSpawner.spawnBall(); // Creating a new ball using the ball spawner
-        ball.setCenterX(event.getX()); // Setting the X position of the ball to the click's X coordinate
-        ball.setCenterY(event.getY()); // Setting the Y position of the ball to the click's Y coordinate
-        balls.add(ball); // Adding the ball to the list of balls
-        Pane pane = (Pane) ((Scene) event.getSource()).getRoot(); // Getting the root pane of the scene
-        pane.getChildren().add(ball); // Adding the ball to the pane
+    private void spawnBallOnClick(MouseEvent event) {
+        Ball ball = ballSpawner.spawnBall();
+        ball.setCenterX(event.getX());
+        ball.setCenterY(event.getY());
+        balls.add(ball);
+        Pane pane = (Pane) ((Scene) event.getSource()).getRoot();
+        pane.getChildren().add(ball);
     }
 
-    public static void main(String[] args) { // Main method to launch the application
-        launch(args); // Calling the application launch method
+    public static void main(String[] args) {
+        launch(args);
     }
 
-    private class Ball extends Circle { // Definition of the Ball class, a subclass of Circle
-        private double dx; // X-axis velocity
-        private double dy; // Y-axis velocity
+    private class Ball extends Circle {
+        private double dx;
+        private double dy;
 
-        public Ball(double radius, Color color) { // Constructor for the Ball class
-            super(radius, color); // Calling the constructor of the Circle class
-            dx = 0; // Initializing X velocity to 0
-            dy = 0; // Initializing Y velocity to 0
+        public Ball(double radius, Color color) {
+            super(radius, color);
+            dx = 0;
+            dy = 0;
         }
 
-        public void setRandomVelocity() { // Method to set a random velocity
-            Random rand = new Random(); // Creating a Random object to generate random numbers
-            dx = rand.nextDouble() * 4 - 2; // Random X velocity between -2 and 2
-            dy = rand.nextDouble() * 4 - 2; // Random Y velocity between -2 and 2
+        public void setRandomVelocity() {
+            Random rand = new Random();
+            dx = rand.nextDouble() * 4 - 2;
+            dy = rand.nextDouble() * 4 - 2;
         }
 
-        public void move() { // Method to move the ball based on its velocity
-            setCenterX(getCenterX() + dx); // Updating the X position
-            setCenterY(getCenterY() + dy); // Updating the Y position
-        }
-
-        public void checkBoundaryCollision(double width, double height) { // Method to handle collisions with window borders
-            if (getCenterX() - getRadius() < 0 || getCenterX() + getRadius() > width) {
-                dx = -dx; // Reversing X velocity on collision with horizontal borders
+        public void move() {
+            // Limitez la vitesse en utilisant MAX_SPEED
+            double speed = Math.sqrt(dx * dx + dy * dy);
+            if (speed > MAX_SPEED) {
+                double ratio = MAX_SPEED / speed;
+                dx *= ratio;
+                dy *= ratio;
             }
-            if (getCenterY() - getRadius() < 0 || getCenterY() + getRadius() > height) {
-                dy = -dy; // Reversing Y velocity on collision with vertical borders
+
+            setCenterX(getCenterX() + dx);
+            setCenterY(getCenterY() + dy);
+        }
+
+        public void checkBoundaryCollision(double width, double height) {
+            if (getCenterX() - getRadius() < 0) {
+                setCenterX(getRadius());
+                dx = -dx * DAMPING_FACTOR;
+            }
+            if (getCenterX() + getRadius() > width) {
+                setCenterX(width - getRadius());
+                dx = -dx * DAMPING_FACTOR;
+            }
+            if (getCenterY() - getRadius() < 0) {
+                setCenterY(getRadius());
+                dy = -dy * DAMPING_FACTOR;
+            }
+            if (getCenterY() + getRadius() > height) {
+                setCenterY(height - getRadius());
+                dy = -dy * DAMPING_FACTOR;
             }
         }
 
-        public void checkBallCollision(List<Ball> balls) { // Method to handle collisions between balls
-            for (Ball other : balls) { // Loop to check collisions with each other ball
-                if (this != other && getBoundsInLocal().intersects(other.getBoundsInLocal())) { // If balls overlap
-                    double tempDx = this.dx; // Swap X velocities
-                    double tempDy = this.dy; // Swap Y velocities
-                    this.dx = other.dx;
-                    this.dy = other.dy;
-                    other.dx = tempDx;
-                    other.dy = tempDy;
+        public void checkBallCollision(List<Ball> balls) {
+            for (Ball other : balls) {
+                if (this != other && intersects(other.getBoundsInLocal())) {
+                    double deltaX = other.getCenterX() - getCenterX();
+                    double deltaY = other.getCenterY() - getCenterY();
+                    double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                    if (distance < getRadius() + other.getRadius()) {
+                        double normalX = deltaX / distance;
+                        double normalY = deltaY / distance;
+
+                        double relativeVelocityX = other.dx - dx;
+                        double relativeVelocityY = other.dy - dy;
+                        double dotProduct = relativeVelocityX * normalX + relativeVelocityY * normalY;
+
+                        double impulse = (2.0 * dotProduct) / (1.0 / getRadius() + 1.0 / other.getRadius());
+                        dx += impulse * normalX;
+                        dy += impulse * normalY;
+                        other.dx -= impulse * normalX;
+                        other.dy -= impulse * normalY;
+                    }
                 }
             }
         }
     }
 
-    private class BallSpawner { // Inner class to spawn balls
-        public Ball spawnBall() { // Method to create a new ball
-            Random rand = new Random(); // Creating a Random object to generate random numbers
+    private class BallSpawner {
+        public Ball spawnBall() {
+            Random rand = new Random();
             int blueComponent;
 
             do {
-                blueComponent = rand.nextInt(256); // Generating a random blue component
-            } while (blueComponent < 100); // Excluding shades of blue that are too dark (less than 100)
+                blueComponent = rand.nextInt(256);
+            } while (blueComponent < 100);
 
-            Color randomColor = Color.rgb(0, 0, blueComponent); // Creating a random color with a variable blue component
+            Color randomColor = Color.rgb(0, 0, blueComponent);
 
-            Ball ball = new Ball(BALL_RADIUS, randomColor); // Creating a new ball with the specified radius and color
-            ball.setRandomVelocity(); // Assigning a random velocity to the ball
-            return ball; // Returning the newly created ball
+            Ball ball = new Ball(BALL_RADIUS, randomColor);
+            ball.setRandomVelocity();
+            return ball;
         }
     }
 }
