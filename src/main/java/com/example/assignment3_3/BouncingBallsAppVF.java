@@ -15,19 +15,30 @@ import java.util.Random;
 
 public class BouncingBallsAppVF extends Application {
 
-    private static final int WIDTH = 900;                 // Width of the application window
-    private static final int HEIGHT = 600;                // Height of the application window
-    private static final int BALL_RADIUS = 20;            // Radius of the balls
-    private static final double DAMPING_FACTOR = 0.5;     // Damping factor for collisions
-    private static final double MAX_SPEED = 5.0;         // Maximum speed limit for balls
+    private static int WIDTH = 900;                 // Width of the application window
+    private static int HEIGHT = 600;                // Height of the application window
+    private static final int BALL_RADIUS = 20;      // Radius of the balls
+    private static final double DAMPING_FACTOR = 0.5; // Damping factor for collisions
+    private static final double MAX_SPEED = 5.0;    // Maximum speed limit for balls
 
-    private List<Ball> balls = new ArrayList<>();         // List to store the balls
+    private List<Ball> balls = new ArrayList<>();    // List to store the balls
     private BallSpawner ballSpawner = new BallSpawner();  // Creates a ball spawner
 
     @Override
     public void start(Stage primaryStage) {
         Pane pane = new Pane();                // Create a pane to display the balls
         Scene scene = new Scene(pane, WIDTH, HEIGHT); // Create a scene with specified size
+
+        // Add a listener for scene width and height changes
+        scene.widthProperty().addListener((observable, oldValue, newValue) -> {
+            WIDTH = newValue.intValue(); // Update the width based on the new value
+            // You can also update ball positions here if needed
+        });
+
+        scene.heightProperty().addListener((observable, oldValue, newValue) -> {
+            HEIGHT = newValue.intValue(); // Update the height based on the new value
+            // You can also update ball positions here if needed
+        });
 
         scene.setOnMouseClicked(this::spawnBallOnClick); // Event handler to create a ball on mouse click
 
